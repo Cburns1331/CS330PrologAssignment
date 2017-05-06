@@ -1,6 +1,3 @@
-:- dynamic(value_check/3).
-:- dynamic(type_check/5).
-
 type(lastname, personal).
 type(maidenname, personal).
 type(firstpet, personal).
@@ -78,12 +75,12 @@ ind(randomriddle, 17).
 ind(captcha, 18).
 
 main :-
-  ML = [],
+   ML = [],
   random_picker(X),
   ask_question(X, ML).
-  /*write('Continue generating lists? (Y/N)'), nl,
-  read(A),
-  continue_gen(A, ML).*/
+  % write('Continue generating lists? (Y/N)'),
+  % read(A),
+  % continue_gen(A, ML).
 
 continue_gen(A, ML) :-
   A == 'Y',
@@ -102,6 +99,23 @@ ask_question(X, ML) :-
   check_start(Z, ML),
   append(ML, TL, L),
   add_question(TL, R, Q).
+
+add_question(TL, R, Q) :-
+  random_picker(X),
+  ind(Z, X),
+  type(Z,NQ),
+  value(Z,NR),
+  string(Z,S),
+  mem_check(S, TL, R, Q, NR). % Is S already in temporary list?
+
+add_question2(TL, R, Q) :-
+  random_picker(X),
+  ind(Z, X),
+  type(Z,NQ),
+  value(Z,NR),
+  V is NR + R,
+  string(Z,S),
+   mem_check2(S, TL, V, Q). % Is S already in temporary list?
 
 check_start(Z, L) :-
   member(Z, L),
@@ -131,7 +145,7 @@ type_check(Y, L, R, Q, NR) :-
   string(X, Y),
   type(X, NQ),
   NQ == Q,
-  add_question(L, R, Q).
+  add_question(Y, L, R, Q).
 
 type_check(Y, L, R, Q, NR) :-
   V is NR + R,
@@ -148,20 +162,3 @@ value_check(Y, L, R, Q) :-
   append(L, TL, NL),
   print(NL),
   !.
-
-add_question(TL, R, Q) :-
-  random_picker(X),
-  ind(Z, X),
-  type(Z,NQ),
-  value(Z,NR),
-  string(Z,S),
-  mem_check(S, TL, R, Q, NR). % Is S already in temporary list?
-
-add_question2(TL, R, Q) :-
-  random_picker(X),
-  ind(Z, X),
-  type(Z,NQ),
-  value(Z,NR),
-  V is NR + R,
-  string(Z,S),
-  mem_check2(S, TL, V, Q). % Is S already in temporary list?
